@@ -1,0 +1,2018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Muhammad Rizwan Alam · Video Editor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <style>
+        /* ========== RESET & GLOBAL ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --midnight: #0B0F14;
+            --teal: #19D3C5;
+            --light: #E8F1F2;
+            --teal-glow: rgba(25, 211, 197, 0.4);
+            --teal-dim: rgba(25, 211, 197, 0.15);
+            --dark-card: #11181F;
+            --dark-border: #1E2A35;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--midnight);
+            color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ========== SCROLLBAR ========== */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--midnight);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--teal);
+            border-radius: 8px;
+        }
+
+        /* ========== UTILITY ========== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            width: 48px;
+            height: 3px;
+            background: var(--teal);
+            border-radius: 4px;
+        }
+
+        .teal {
+            color: var(--teal);
+        }
+
+        /* ========== SCROLL REVEAL ========== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes logoReveal {
+            0% {
+                opacity: 0;
+                filter: blur(6px);
+                transform: scale(0.92);
+            }
+            60% {
+                opacity: 0.9;
+                filter: blur(0px);
+            }
+            100% {
+                opacity: 1;
+                filter: blur(0px);
+                transform: scale(1);
+            }
+        }
+
+        @keyframes lightSweep {
+            0% {
+                background-position: -200% center;
+            }
+            100% {
+                background-position: 200% center;
+            }
+        }
+
+        @keyframes slideInLeft {
+            0% {
+                opacity: 0;
+                transform: translateX(-40px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInDelay {
+            0% {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulseGlow {
+            0%,
+            100% {
+                box-shadow: 0 0 12px var(--teal-glow), 0 0 0 0 rgba(25, 211, 197, 0.1);
+            }
+            50% {
+                box-shadow: 0 0 28px var(--teal-glow), 0 0 0 12px rgba(25, 211, 197, 0);
+            }
+        }
+
+        @keyframes filmStrip {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        @keyframes markerPop {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes barGrow {
+            0% {
+                width: 0%;
+            }
+            100% {
+                width: var(--bar-width);
+            }
+        }
+
+        @keyframes arrowNudge {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(6px);
+            }
+        }
+
+        /* ========== HEADER / LOGO ========== */
+        .header {
+            padding: 28px 0 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: var(--light);
+            animation: logoReveal 1.1s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(90deg,
+                    var(--light) 0%,
+                    var(--light) 40%,
+                    var(--teal) 50%,
+                    var(--light) 60%,
+                    var(--light) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: logoReveal 1.1s cubic-bezier(0.23, 1, 0.32, 1) forwards,
+                       lightSweep 2.4s ease-in-out 1.2s infinite;
+        }
+
+        .logo span {
+            -webkit-text-fill-color: var(--teal);
+            background: none;
+            color: var(--teal);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            opacity: 0.7;
+            transition: opacity 0.3s, color 0.3s;
+            letter-spacing: 0.3px;
+        }
+        .nav-links a:hover {
+            opacity: 1;
+            color: var(--teal);
+        }
+
+        /* ========== HERO ========== */
+        .hero {
+            padding: 60px 0 40px;
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            flex-wrap: wrap;
+        }
+
+        .hero-content {
+            flex: 1 1 380px;
+        }
+
+        .hero-content h1 {
+            font-size: 3.6rem;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.5px;
+            animation: slideInLeft 0.9s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        .hero-content h1 .highlight {
+            color: var(--teal);
+            position: relative;
+        }
+
+        .hero-sub {
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: rgba(232, 241, 242, 0.7);
+            margin-top: 12px;
+            letter-spacing: 0.8px;
+            animation: fadeInDelay 0.7s ease-out 0.35s both;
+        }
+
+        .hero-sub span {
+            color: var(--teal);
+            font-weight: 500;
+        }
+
+        .hero-actions {
+            margin-top: 32px;
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            animation: fadeInDelay 0.7s ease-out 0.55s both;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-primary {
+            background: var(--teal);
+            color: var(--midnight);
+            animation: pulseGlow 2.8s ease-in-out infinite;
+        }
+        .btn-primary:hover {
+            background: #14b8ab;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--light);
+            border: 1.5px solid rgba(232, 241, 242, 0.2);
+        }
+        .btn-outline:hover {
+            border-color: var(--teal);
+            color: var(--teal);
+            transform: translateY(-2px);
+        }
+
+        .btn .arrow {
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        .btn:hover .arrow {
+            animation: arrowNudge 0.8s ease-in-out infinite;
+        }
+
+        /* ========== PROFILE IMAGE ========== */
+        .hero-image {
+            flex: 0 0 280px;
+            display: flex;
+            justify-content: center;
+            animation: fadeInDelay 0.9s ease-out 0.3s both;
+        }
+
+        .profile-wrapper {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--teal);
+            box-shadow: 0 0 40px rgba(25, 211, 197, 0.2), 0 0 80px rgba(25, 211, 197, 0.05);
+            position: relative;
+            transition: box-shadow 0.4s ease;
+        }
+        .profile-wrapper:hover {
+            box-shadow: 0 0 60px rgba(25, 211, 197, 0.35), 0 0 120px rgba(25, 211, 197, 0.1);
+        }
+
+        .profile-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* ========== TYPEWRITER ========== */
+        .typewriter-container {
+            margin-top: 16px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--teal);
+            letter-spacing: 1.2px;
+            min-height: 1.8em;
+            animation: fadeInDelay 0.7s ease-out 0.7s both;
+        }
+
+        .typewriter-text {
+            display: inline-block;
+            border-right: 2px solid var(--teal);
+            padding-right: 4px;
+            animation: blinkCursor 0.9s step-end infinite;
+        }
+
+        @keyframes blinkCursor {
+            0%,
+            100% {
+                border-color: var(--teal);
+            }
+            50% {
+                border-color: transparent;
+            }
+        }
+
+        /* ========== SECTIONS ========== */
+        section {
+            padding: 70px 0;
+        }
+
+        /* ========== ABOUT ========== */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: start;
+        }
+
+        .about-text p {
+            font-size: 1.05rem;
+            color: rgba(232, 241, 242, 0.8);
+            margin-bottom: 16px;
+        }
+
+        .about-text strong {
+            color: var(--light);
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .skills-list-empty {
+            min-height: 8px;
+        }
+
+        .skill-tag {
+            background: rgba(17, 24, 31, 0.9);
+            border: 1px solid rgba(25, 211, 197, 0.18);
+            padding: 7px 14px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            color: rgba(232, 241, 242, 0.8);
+            transition: all 0.25s ease;
+            cursor: default;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+        }
+        .skill-tag:hover {
+            border-color: var(--teal);
+            color: var(--teal);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(25, 211, 197, 0.12);
+        }
+
+        /* ========== SKILLS PROGRESS ========== */
+        .skills-panel {
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(ellipse at 100% 0%, rgba(25, 211, 197, 0.09), transparent 42%),
+                linear-gradient(145deg, rgba(19, 27, 34, 0.98), rgba(8, 12, 16, 0.98));
+            border: 1px solid rgba(25, 211, 197, 0.2);
+            border-radius: 20px;
+            padding: 22px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255,255,255,0.045);
+            transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+        }
+
+        .skills-panel:hover {
+            transform: translateY(-3px);
+            border-color: rgba(25, 211, 197, 0.38);
+            box-shadow: 0 28px 68px rgba(0, 0, 0, 0.34), 0 0 32px rgba(25, 211, 197, 0.07);
+        }
+
+        .skills-panel-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .skills-panel-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: rgba(232, 241, 242, 0.92);
+            letter-spacing: 0.4px;
+        }
+
+        .skills-panel-subtitle {
+            margin-top: 3px;
+            color: rgba(232, 241, 242, 0.42);
+            font-size: 0.72rem;
+            letter-spacing: 0.25px;
+        }
+
+        .skills-panel-count {
+            flex: 0 0 auto;
+            padding: 5px 9px;
+            border: 1px solid rgba(25, 211, 197, 0.2);
+            border-radius: 999px;
+            color: var(--teal);
+            background: rgba(25, 211, 197, 0.06);
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .progress-section {
+            display: grid;
+            gap: 10px;
+        }
+
+        .progress-item {
+            background: rgba(255, 255, 255, 0.018);
+            border: 1px solid rgba(255, 255, 255, 0.045);
+            border-radius: 14px;
+            padding: 13px 14px 12px;
+            transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .progress-item:hover {
+            transform: translateX(2px);
+            background: rgba(255, 255, 255, 0.035);
+            border-color: rgba(25, 211, 197, 0.16);
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.82rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: rgba(232, 241, 242, 0.8);
+        }
+
+        .skill-name {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .skill-tool-icon {
+            display: inline-grid;
+            place-items: center;
+            width: 27px;
+            height: 27px;
+            border: 1px solid rgba(25, 211, 197, 0.22);
+            border-radius: 8px;
+            color: var(--teal);
+            background: linear-gradient(145deg, rgba(25, 211, 197, 0.12), rgba(25, 211, 197, 0.035));
+            font-size: 0.62rem;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+        }
+
+        .progress-label span:last-child {
+            color: var(--teal);
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 999px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--teal), #7bf7ea 100%);
+            box-shadow: 0 0 18px rgba(25, 211, 197, 0.35);
+            transition: width 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .progress-fill.animated {
+            width: var(--bar-width);
+        }
+
+        /* ========== PROJECTS PLACEHOLDER ========== */
+        .projects-placeholder {
+            background: var(--dark-card);
+            border: 2px dashed var(--dark-border);
+            border-radius: 16px;
+            padding: 60px 32px;
+            text-align: center;
+            transition: border-color 0.3s ease;
+        }
+
+        .projects-placeholder:hover {
+            border-color: var(--teal);
+        }
+
+        .projects-placeholder h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: rgba(232, 241, 242, 0.5);
+            letter-spacing: 1px;
+        }
+
+        .projects-placeholder p {
+            color: rgba(232, 241, 242, 0.3);
+            margin-top: 8px;
+            font-size: 0.95rem;
+        }
+
+        /* ========== TIMELINE ========== */
+        .timeline {
+            position: relative;
+            padding: 40px 0 20px;
+            overflow-x: auto;
+            display: flex;
+            gap: 0;
+            min-height: 140px;
+            align-items: center;
+        }
+
+        .timeline-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--dark-border);
+            transform: translateY(-50%);
+        }
+
+        .timeline-marker {
+            flex: 0 0 auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 120px;
+            opacity: 0;
+            animation: markerPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .timeline-marker:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+        .timeline-marker:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+        .timeline-marker:nth-child(3) {
+            animation-delay: 0.8s;
+        }
+        .timeline-marker:nth-child(4) {
+            animation-delay: 1.1s;
+        }
+        .timeline-marker:nth-child(5) {
+            animation-delay: 1.4s;
+        }
+
+        .timeline-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--midnight);
+            border: 3px solid var(--teal);
+            box-shadow: 0 0 16px rgba(25, 211, 197, 0.3);
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-marker:hover .timeline-dot {
+            background: var(--teal);
+            box-shadow: 0 0 28px rgba(25, 211, 197, 0.6);
+            transform: scale(1.2);
+        }
+
+        .timeline-label {
+            margin-top: 14px;
+            font-size: 0.75rem;
+            color: rgba(232, 241, 242, 0.5);
+            text-align: center;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .timeline-marker:hover .timeline-label {
+            color: var(--teal);
+        }
+
+        /* ========== BEFORE / AFTER ========== */
+        .ba-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+            aspect-ratio: 16 / 9;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--dark-border);
+            cursor: ew-resize;
+            user-select: none;
+            background: var(--dark-card);
+        }
+
+        .ba-before,
+        .ba-after {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+        }
+
+        .ba-before {
+            background: #1a1f26;
+            color: rgba(232, 241, 242, 0.25);
+        }
+
+        .ba-after {
+            background: #0f2a2a;
+            color: var(--teal);
+            clip-path: inset(0 50% 0 0);
+        }
+
+        .ba-divider {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--teal);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            box-shadow: 0 0 20px rgba(25, 211, 197, 0.5);
+            pointer-events: none;
+        }
+
+        .ba-divider::after {
+            content: '◂ ▸';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--teal);
+            color: var(--midnight);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            box-shadow: 0 0 24px rgba(25, 211, 197, 0.5);
+            letter-spacing: 1px;
+        }
+
+        .ba-before span,
+        .ba-after span {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ========== EXPERIENCE ========== */
+        .exp-card {
+            background: var(--dark-card);
+            border: 1px solid var(--dark-border);
+            border-radius: 16px;
+            padding: 28px 32px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: border-color 0.3s ease;
+        }
+        .exp-card:hover {
+            border-color: var(--teal);
+        }
+
+        .exp-badge {
+            background: var(--teal);
+            color: var(--midnight);
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .exp-text {
+            font-size: 1rem;
+            color: rgba(232, 241, 242, 0.8);
+        }
+
+        /* ========== CONTACT ========== */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .contact-item {
+            background: var(--dark-card);
+            border: 1px solid var(--dark-border);
+            border-radius: 16px;
+            padding: 28px 32px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--light);
+        }
+        .contact-item:hover {
+            border-color: var(--teal);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(25, 211, 197, 0.08);
+        }
+
+        .contact-action-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 13px;
+            background: var(--teal-dim);
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            color: var(--teal);
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .contact-action-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .contact-item:hover .contact-action-icon {
+            transform: scale(1.06);
+            background: rgba(25, 211, 197, 0.22);
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            flex: 1;
+        }
+        .contact-info .label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(232, 241, 242, 0.4);
+        }
+        .contact-info .value {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--light);
+            margin-top: 2px;
+            word-break: break-all;
+        }
+
+        /* ========== CTA ========== */
+        .cta-section {
+            text-align: center;
+            padding: 60px 0 80px;
+        }
+
+        .cta-section h2 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+        }
+
+        .cta-section h2 .teal {
+            color: var(--teal);
+        }
+
+        .cta-section p {
+            color: rgba(232, 241, 242, 0.6);
+            max-width: 480px;
+            margin: 0 auto 32px;
+        }
+
+        /* ========== FILM STRIP BACKGROUND ========== */
+        .film-strip-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 40px 0;
+            animation: filmStrip 60s linear infinite;
+        }
+
+        .film-strip-bg .strip {
+            display: flex;
+            gap: 40px;
+            white-space: nowrap;
+            font-size: 8rem;
+            font-weight: 900;
+            color: var(--light);
+            letter-spacing: 20px;
+        }
+
+        /* ========== BILINGUAL FAQ CHAT ========== */
+        .faq-chat-launcher {
+            position: fixed;
+            right: 26px;
+            bottom: 24px;
+            z-index: 30;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 13px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 999px;
+            background: linear-gradient(135deg, #21ded0, #12b8ad);
+            color: #071110;
+            box-shadow: 0 12px 34px rgba(0, 0, 0, 0.38), 0 0 24px rgba(25, 211, 197, 0.22);
+            font: inherit;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .faq-chat-launcher:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 38px rgba(0, 0, 0, 0.42), 0 0 30px rgba(25, 211, 197, 0.32);
+        }
+
+        .faq-chat-launcher:focus-visible,
+        .faq-chat button:focus-visible,
+        .faq-chat input:focus-visible {
+            outline: 2px solid var(--teal);
+            outline-offset: 3px;
+        }
+
+        .faq-chat-launcher-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .faq-chat {
+            position: fixed;
+            right: 26px;
+            bottom: 86px;
+            z-index: 30;
+            display: flex;
+            flex-direction: column;
+            width: min(380px, calc(100vw - 32px));
+            max-height: min(600px, calc(100vh - 120px));
+            overflow: hidden;
+            padding: 0;
+            border: 1px solid rgba(25, 211, 197, 0.24);
+            border-radius: 20px;
+            background: #0c1218;
+            box-shadow: 0 26px 80px rgba(0, 0, 0, 0.58), 0 0 32px rgba(25, 211, 197, 0.08);
+            animation: chatPanelIn 0.22s ease-out both;
+        }
+
+        .faq-chat[hidden] {
+            display: none;
+        }
+
+        @keyframes chatPanelIn {
+            from { opacity: 0; transform: translateY(10px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .faq-chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 17px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            background: radial-gradient(ellipse at 0 0, rgba(25, 211, 197, 0.1), transparent 70%);
+        }
+
+        .faq-chat-heading {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .faq-chat-avatar {
+            display: grid;
+            place-items: center;
+            width: 38px;
+            height: 38px;
+            border: 1px solid rgba(25, 211, 197, 0.28);
+            border-radius: 12px;
+            background: rgba(25, 211, 197, 0.09);
+            color: var(--teal);
+            font-size: 1.1rem;
+        }
+
+        .faq-chat-title {
+            color: var(--light);
+            font-size: 0.92rem;
+            font-weight: 700;
+        }
+
+        .faq-chat-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 2px;
+            color: rgba(232, 241, 242, 0.5);
+            font-size: 0.68rem;
+        }
+
+        .faq-chat-status::before {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--teal);
+            box-shadow: 0 0 8px var(--teal-glow);
+            content: '';
+        }
+
+        .faq-chat-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .faq-language-toggle {
+            display: flex;
+            padding: 3px;
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.22);
+        }
+
+        .faq-language-toggle button,
+        .faq-chat-close {
+            border: 0;
+            color: rgba(232, 241, 242, 0.62);
+            background: transparent;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .faq-language-toggle button {
+            padding: 5px 8px;
+            border-radius: 999px;
+            font-size: 0.65rem;
+            font-weight: 700;
+        }
+
+        .faq-language-toggle button[aria-pressed="true"] {
+            color: #071110;
+            background: var(--teal);
+        }
+
+        .faq-chat-close {
+            display: grid;
+            place-items: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+        }
+
+        .faq-chat-close:hover {
+            color: var(--light);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .faq-chat-body {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            min-height: 180px;
+            overflow: auto;
+            padding: 16px;
+            overscroll-behavior: contain;
+        }
+
+        .faq-chat-messages {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .faq-chat-message {
+            max-width: 90%;
+            padding: 10px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px 14px 14px 4px;
+            color: rgba(232, 241, 242, 0.86);
+            background: rgba(255, 255, 255, 0.045);
+            font-size: 0.79rem;
+            line-height: 1.55;
+            white-space: pre-line;
+        }
+
+        .faq-chat-message.user {
+            align-self: flex-end;
+            border-color: rgba(25, 211, 197, 0.18);
+            border-radius: 14px 14px 4px 14px;
+            color: #eafffd;
+            background: rgba(25, 211, 197, 0.11);
+        }
+
+        .faq-chat-contact-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 9px;
+        }
+
+        .faq-chat-contact-links a {
+            padding: 6px 9px;
+            border: 1px solid rgba(25, 211, 197, 0.24);
+            border-radius: 999px;
+            color: var(--teal);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .faq-chat-contact-links a:hover {
+            background: rgba(25, 211, 197, 0.09);
+        }
+
+        .faq-chat-prompts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            padding: 12px 0 2px;
+        }
+
+        .faq-chat-prompts button {
+            padding: 7px 9px;
+            border: 1px solid rgba(25, 211, 197, 0.2);
+            border-radius: 999px;
+            color: rgba(232, 241, 242, 0.76);
+            background: rgba(25, 211, 197, 0.045);
+            font: inherit;
+            font-size: 0.68rem;
+            cursor: pointer;
+            transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .faq-chat-prompts button:hover {
+            border-color: var(--teal);
+            color: var(--teal);
+            background: rgba(25, 211, 197, 0.1);
+        }
+
+        .faq-chat-form {
+            display: flex;
+            gap: 8px;
+            padding: 12px 14px 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+            background: rgba(0, 0, 0, 0.16);
+        }
+
+        .faq-chat-input {
+            min-width: 0;
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 11px;
+            color: var(--light);
+            background: rgba(255, 255, 255, 0.045);
+            font: inherit;
+            font-size: 0.78rem;
+        }
+
+        .faq-chat-input::placeholder {
+            color: rgba(232, 241, 242, 0.38);
+        }
+
+        .faq-chat-send {
+            flex: 0 0 auto;
+            padding: 0 13px;
+            border: 0;
+            border-radius: 11px;
+            color: #071110;
+            background: var(--teal);
+            font: inherit;
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .faq-chat-send:hover {
+            background: #49e4d8;
+        }
+
+        @media (max-width: 480px) {
+            .faq-chat {
+                right: 12px;
+                bottom: 78px;
+                max-height: min(560px, calc(100vh - 100px));
+            }
+            .faq-chat-launcher {
+                right: 14px;
+                bottom: 14px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .faq-chat,
+            .faq-chat-launcher {
+                animation: none;
+                transition: none;
+            }
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 900px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.6rem;
+            }
+            .hero {
+                gap: 40px;
+                padding: 40px 0 20px;
+            }
+            .profile-wrapper {
+                width: 200px;
+                height: 200px;
+            }
+            .hero-image {
+                flex: 0 0 200px;
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .nav-links {
+                gap: 18px;
+                font-size: 0.8rem;
+                flex-wrap: wrap;
+            }
+            .section-title {
+                font-size: 1.6rem;
+            }
+            .cta-section h2 {
+                font-size: 1.8rem;
+            }
+            .exp-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .timeline-marker {
+                width: 90px;
+            }
+            .ba-container {
+                aspect-ratio: 4 / 3;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            .hero-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .profile-wrapper {
+                width: 160px;
+                height: 160px;
+            }
+            .hero-image {
+                flex: 0 0 160px;
+            }
+            .container {
+                padding: 0 16px;
+            }
+            .contact-item {
+                padding: 20px;
+            }
+            .timeline-marker {
+                width: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== FILM STRIP BACKGROUND ===== -->
+    <div class="film-strip-bg" aria-hidden="true">
+        <div class="strip">▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸</div>
+        <div class="strip">▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸ ▸</div>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div style="position: relative; z-index: 1;">
+
+        <!-- ===== HEADER ===== -->
+        <header class="container header">
+            <div class="logo">RIZWAN<span>.</span></div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#experience">Experience</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- ===== HERO ===== -->
+        <section class="container hero">
+            <div class="hero-content">
+                <h1>
+                    VIDEO <span class="highlight">EDITOR</span>
+                </h1>
+                <p class="hero-sub">
+                    <span>Cinematic</span> • <span>Reels</span> • <span>Motion Graphics</span>
+                </p>
+                <div class="typewriter-container">
+                    <span class="typewriter-text" id="typewriter"></span>
+                </div>
+                <div class="hero-actions">
+                    <a href="#contact" class="btn btn-primary">
+                        LET'S WORK TOGETHER <span class="arrow">→</span>
+                    </a>
+                    <a href="#projects" class="btn btn-outline">
+                        VIEW PROJECTS
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="profile-wrapper">
+                    <!-- ✅ YOUR PROFILE IMAGE -->
+                    <img src="rizwan.png.png" alt="Muhammad Rizwan Alam" />
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== ABOUT ===== -->
+        <section id="about" class="container reveal">
+            <h2 class="section-title">About <span class="teal">Me</span></h2>
+            <div class="about-grid">
+                <div class="about-text">
+                    <p>
+                        I’m a creative <strong>AI Video Editor</strong> passionate about transforming ideas into engaging,
+                        high-quality visual content. I specialize in short-form videos, social media reels, cinematic edits,
+                        AI-generated videos, and creative storytelling.
+                    </p>
+                    <p>
+                        I combine modern AI tools with professional video editing techniques to create visually compelling
+                        content that captures attention and communicates ideas effectively. From concept development and AI
+                        generation to editing, transitions, sound design, captions, and final production, I focus on every
+                        detail to deliver polished results.
+                    </p>
+                    <p style="color: rgba(232,241,242,0.6); font-size: 0.95rem;">
+                        My goal is simple: <strong>Turn ideas into videos that look professional, feel engaging, and leave an impact.</strong>
+                    </p>
+                </div>
+                <div class="skills-panel">
+                    <div class="skills-panel-header">
+                        <div>
+                            <h3 class="skills-panel-title">Tools &amp; Skills</h3>
+                            <p class="skills-panel-subtitle">Creative software proficiency</p>
+                        </div>
+                        <span class="skills-panel-count">03 TOOLS</span>
+                    </div>
+                    <div class="progress-section">
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span class="skill-name"><span class="skill-tool-icon" aria-hidden="true">Pr</span>Premiere Pro</span>
+                                <span class="skill-value" data-target="90">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" data-width="90" style="--bar-width: 90%;"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span class="skill-name"><span class="skill-tool-icon" aria-hidden="true">Ae</span>After Effects</span>
+                                <span class="skill-value" data-target="80">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" data-width="80" style="--bar-width: 80%;"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span class="skill-name"><span class="skill-tool-icon" aria-hidden="true">Cc</span>CapCut</span>
+                                <span class="skill-value" data-target="95">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" data-width="95" style="--bar-width: 95%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SKILLS ===== -->
+        <section id="skills" class="container reveal">
+            <h2 class="section-title">My <span class="teal">Skills</span></h2>
+            <div class="skills-list">
+                <span class="skill-tag">AI Video Generation</span>
+                <span class="skill-tag">Text-to-Video</span>
+                <span class="skill-tag">Image-to-Video</span>
+                <span class="skill-tag">AI Storytelling</span>
+                <span class="skill-tag">Prompt Engineering</span>
+                <span class="skill-tag">Video Editing</span>
+                <span class="skill-tag">Short-Form Editing</span>
+                <span class="skill-tag">Cinematic Editing</span>
+                <span class="skill-tag">Motion Graphics</span>
+                <span class="skill-tag">Visual Effects</span>
+                <span class="skill-tag">Color Grading</span>
+                <span class="skill-tag">Sound Design</span>
+                <span class="skill-tag">AI Voiceover</span>
+                <span class="skill-tag">Captions &amp; Subtitles</span>
+                <span class="skill-tag">Social Media Reels</span>
+            </div>
+        </section>
+
+        <section class="container reveal">
+            <h2 class="section-title">Additional <span class="teal">Skills</span></h2>
+            <div class="skills-list skills-list-empty"></div>
+        </section>
+
+        <!-- ===== PROJECTS (PLACEHOLDER) ===== -->
+        <section id="projects" class="container reveal">
+            <h2 class="section-title">Pro<span class="teal">jects</span></h2>
+            <div class="projects-placeholder">
+                <h3>⏳ Projects Coming Soon</h3>
+                <p>Portfolio is being updated — check back shortly.</p>
+            </div>
+        </section>
+
+        <!-- ===== TIMELINE (UNIQUE PROJECT VISUAL) ===== -->
+        <section class="container reveal">
+            <h2 class="section-title" style="margin-bottom: 0.5rem;">Project <span class="teal">Timeline</span></h2>
+            <p style="color: rgba(232,241,242,0.4); font-size: 0.85rem; margin-bottom: 8px;">
+                Hover over each marker to preview
+            </p>
+            <div class="timeline">
+                <div class="timeline-line"></div>
+                <div class="timeline-marker">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-label">Cinematic Reel</div>
+                </div>
+                <div class="timeline-marker">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-label">Motion Graphics</div>
+                </div>
+                <div class="timeline-marker">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-label">Color Grading</div>
+                </div>
+                <div class="timeline-marker">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-label">Social Media</div>
+                </div>
+                <div class="timeline-marker">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-label">VFX / Green Screen</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== BEFORE / AFTER ===== -->
+        <section class="container reveal">
+            <h2 class="section-title">Before <span class="teal">→</span> After</h2>
+            <p style="color: rgba(232,241,242,0.45); font-size: 0.9rem; margin-bottom: 24px;">
+                Drag the slider to see the color grading transformation
+            </p>
+            <div class="ba-container" id="baContainer">
+                <div class="ba-before"><span>ORIGINAL</span></div>
+                <div class="ba-after"><span>GRADED</span></div>
+                <div class="ba-divider" id="baDivider"></div>
+            </div>
+        </section>
+
+        <!-- ===== EXPERIENCE ===== -->
+        <section id="experience" class="container reveal">
+            <h2 class="section-title">Ex<span class="teal">perience</span></h2>
+            <div class="exp-card">
+                <div class="exp-badge">Fresher</div>
+                <div class="exp-text">
+                    Eager to apply my video editing skills in a professional environment.
+                    Dedicated to continuous learning and delivering high-quality work.
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== CONTACT ===== -->
+        <section id="contact" class="container reveal">
+            <h2 class="section-title">Contact <span class="teal">Me</span></h2>
+            <div class="contact-grid">
+                <a href="https://wa.me/923485269336" target="_blank" rel="noopener noreferrer" class="contact-item" aria-label="Chat with me on WhatsApp at +92 348 5269336">
+                    <span class="contact-action-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M20.1 11.8a8.1 8.1 0 0 1-12 7.1L4 20l1.1-4A8.1 8.1 0 1 1 20.1 11.8Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M8.4 8.2c.2-.4.4-.4.7-.4h.4c.2 0 .3.1.4.4l.7 1.6c.1.2.1.4-.1.6l-.5.6c-.2.2-.2.4 0 .6.6 1 1.4 1.8 2.4 2.3.2.1.4.1.6-.1l.7-.8c.2-.2.4-.2.6-.1l1.5.7c.3.1.4.3.4.5 0 .3-.2 1-.6 1.4-.4.4-1 .7-1.7.6-1-.1-2.2-.6-3.5-1.7-1.1-.9-2-2-2.5-3.2-.5-1.1-.4-2.1.1-2.8.2-.3.4-.5.5-.6Z" fill="currentColor"/>
+                        </svg>
+                    </span>
+                    <div class="contact-info">
+                        <span class="label">WhatsApp</span>
+                        <span class="value">+92 348 5269336</span>
+                    </div>
+                </a>
+                <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=rizwansps7472%40gmail.com" target="_blank" rel="noopener noreferrer" class="contact-item" aria-label="Email me at rizwansps7472@gmail.com using Gmail">
+                    <span class="contact-action-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <rect x="3.2" y="5.2" width="17.6" height="13.6" rx="2.4" stroke="currentColor" stroke-width="1.7"/>
+                            <path d="m4.2 7 7.8 6.1L19.8 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
+                    <div class="contact-info">
+                        <span class="label">Email</span>
+                        <span class="value">rizwansps7472@gmail.com</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- ===== CTA ===== -->
+        <section class="container cta-section reveal">
+            <h2>LET'S <span class="teal">WORK</span> TOGETHER</h2>
+            <p>Have a project in mind? Let's bring your vision to life with cinematic editing.</p>
+            <a href="mailto:rizwansps7472@gmail.com" class="btn btn-primary" style="font-size: 1.05rem; padding: 16px 44px;">
+                GET IN TOUCH <span class="arrow">→</span>
+            </a>
+        </section>
+
+    </div>
+
+    <!-- ===== BILINGUAL PORTFOLIO FAQ CHAT ===== -->
+    <button class="faq-chat-launcher" id="faqChatLauncher" type="button" aria-expanded="false" aria-controls="faqChat">
+        <svg class="faq-chat-launcher-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2v-6.5A7.5 7.5 0 1 1 20 11.5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8 11h8M8 14h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        <span id="faqLauncherLabel">Ask about my work</span>
+    </button>
+
+    <section class="faq-chat" id="faqChat" aria-label="Portfolio FAQ chat" hidden>
+        <header class="faq-chat-header">
+            <div class="faq-chat-heading">
+                <div class="faq-chat-avatar" aria-hidden="true">✦</div>
+                <div>
+                    <h2 class="faq-chat-title" id="faqChatTitle">Portfolio FAQ</h2>
+                    <p class="faq-chat-status" id="faqChatStatus">Quick answers about my work</p>
+                </div>
+            </div>
+            <div class="faq-chat-header-actions">
+                <div class="faq-language-toggle" role="group" aria-label="Choose language">
+                    <button type="button" data-language="en" aria-pressed="true">EN</button>
+                    <button type="button" data-language="ur" aria-pressed="false">اردو</button>
+                </div>
+                <button class="faq-chat-close" id="faqChatClose" type="button" aria-label="Close chat">&times;</button>
+            </div>
+        </header>
+        <div class="faq-chat-body" id="faqChatBody">
+            <div class="faq-chat-messages" id="faqChatMessages" role="log" aria-live="polite" aria-relevant="additions"></div>
+            <div class="faq-chat-prompts" id="faqChatPrompts" aria-label="Suggested questions"></div>
+        </div>
+        <form class="faq-chat-form" id="faqChatForm">
+            <input class="faq-chat-input" id="faqChatInput" type="text" maxlength="240" autocomplete="off" placeholder="Ask a question..." aria-label="Ask a question" />
+            <button class="faq-chat-send" id="faqChatSend" type="submit">Send</button>
+        </form>
+    </section>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ========== TYPEWRITER ==========
+            const typewriterEl = document.getElementById('typewriter');
+            const words = ['VIDEO EDITING', 'MOTION GRAPHICS', 'COLOR GRADING', 'AI VIDEO EDITING'];
+            let wordIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            let typeSpeed = 80;
+
+            function typeWriter() {
+                const currentWord = words[wordIndex];
+                if (isDeleting) {
+                    typewriterEl.textContent = currentWord.substring(0, charIndex - 1);
+                    charIndex--;
+                    typeSpeed = 40;
+                } else {
+                    typewriterEl.textContent = currentWord.substring(0, charIndex + 1);
+                    charIndex++;
+                    typeSpeed = 80;
+                }
+
+                if (!isDeleting && charIndex === currentWord.length) {
+                    isDeleting = true;
+                    typeSpeed = 1600; // pause at end
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    wordIndex = (wordIndex + 1) % words.length;
+                    typeSpeed = 400;
+                }
+
+                setTimeout(typeWriter, typeSpeed);
+            }
+
+            // Start after a small delay
+            setTimeout(typeWriter, 1200);
+
+            // ========== SCROLL REVEAL ==========
+            function animateSkillBars(section) {
+                const fills = section.querySelectorAll('.progress-fill');
+                const values = section.querySelectorAll('.skill-value');
+
+                fills.forEach((fill, index) => {
+                    const target = Number(fill.dataset.width || 0);
+                    const valueEl = values[index];
+                    const duration = 1200;
+                    const delay = index * 180;
+                    const startTime = performance.now() + delay;
+
+                    const tick = (now) => {
+                        const elapsed = now - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        const eased = 1 - Math.pow(1 - progress, 3);
+                        const current = Math.round(target * eased);
+
+                        fill.style.width = current + '%';
+                        if (valueEl) {
+                            valueEl.textContent = current + '%';
+                        }
+
+                        if (progress < 1) {
+                            requestAnimationFrame(tick);
+                        } else {
+                            fill.style.width = target + '%';
+                            if (valueEl) {
+                                valueEl.textContent = target + '%';
+                            }
+                        }
+                    };
+
+                    requestAnimationFrame(tick);
+                });
+            }
+
+            const revealElements = document.querySelectorAll('.reveal');
+            const revealObserver = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            if (entry.target.id === 'about') {
+                                animateSkillBars(entry.target);
+                            }
+                            revealObserver.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    threshold: 0.15,
+                    rootMargin: '0px 0px -40px 0px',
+                }
+            );
+
+            revealElements.forEach((el) => revealObserver.observe(el));
+
+            // ========== BEFORE / AFTER SLIDER ==========
+            const container = document.getElementById('baContainer');
+            const divider = document.getElementById('baDivider');
+            const afterEl = container ? container.querySelector('.ba-after') : null;
+
+            if (container && divider && afterEl) {
+                let isDragging = false;
+
+                function setPosition(x) {
+                    const rect = container.getBoundingClientRect();
+                    let pos = (x - rect.left) / rect.width;
+                    pos = Math.max(0.02, Math.min(0.98, pos));
+                    const percent = pos * 100;
+                    divider.style.left = percent + '%';
+                    afterEl.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+                }
+
+                // Mouse events
+                container.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    setPosition(e.clientX);
+                });
+
+                window.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    setPosition(e.clientX);
+                });
+
+                window.addEventListener('mouseup', () => {
+                    isDragging = false;
+                });
+
+                // Touch events
+                container.addEventListener('touchstart', (e) => {
+                    isDragging = true;
+                    const touch = e.touches[0];
+                    setPosition(touch.clientX);
+                }, { passive: true });
+
+                window.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    const touch = e.touches[0];
+                    setPosition(touch.clientX);
+                }, { passive: true });
+
+                window.addEventListener('touchend', () => {
+                    isDragging = false;
+                });
+
+                // Initial position
+                setPosition(container.getBoundingClientRect().left + container.getBoundingClientRect().width * 0.5);
+            }
+
+            // ========== SMOOTH SCROLL FOR NAV ==========
+            document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href === '#') return;
+                    const target = document.querySelector(href);
+                    if (target) {
+                        e.preventDefault();
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+
+            // ========== BILINGUAL FAQ CHAT ==========
+            const faqChat = document.getElementById('faqChat');
+            const faqLauncher = document.getElementById('faqChatLauncher');
+            const faqClose = document.getElementById('faqChatClose');
+            const faqMessages = document.getElementById('faqChatMessages');
+            const faqPrompts = document.getElementById('faqChatPrompts');
+            const faqBody = document.getElementById('faqChatBody');
+            const faqForm = document.getElementById('faqChatForm');
+            const faqInput = document.getElementById('faqChatInput');
+            let faqLanguage = 'en';
+            let welcomeAdded = false;
+
+            const faqItems = [
+                {
+                    id: 'services',
+                    question: { en: 'What services do you offer?', ur: 'Aap kaun si services dete hain?' },
+                    answer: {
+                        en: 'I create AI-generated videos, short-form edits and social media reels, cinematic edits, motion graphics, visual effects, captions, and sound design.',
+                        ur: 'Main AI-generated videos, short-form edits aur social media reels, cinematic edits, motion graphics, visual effects, captions aur sound design par kaam karta hoon.'
+                    },
+                    keywords: ['services', 'service', 'what do you offer', 'what do you do', 'kya services', 'kaun si services', 'kon si services', 'kya kaam', 'kya karte hain', 'video editing', 'video edit', 'reels', 'short form', 'short-form', 'cinematic edit', 'ai video']
+                },
+                {
+                    id: 'tools',
+                    question: { en: 'Which tools do you use?', ur: 'Aap kaun se tools use karte hain?' },
+                    answer: {
+                        en: 'My listed editing tools are Adobe Premiere Pro, Adobe After Effects, and CapCut. I also work with modern AI video tools.',
+                        ur: 'Mere listed editing tools Adobe Premiere Pro, Adobe After Effects aur CapCut hain. Main modern AI video tools bhi use karta hoon.'
+                    },
+                    keywords: ['tools', 'software', 'which apps', 'which tools', 'premiere pro', 'after effects', 'capcut', 'kaun se tools', 'kon se tools', 'konsay tools', 'kaun se software', 'kon se software', 'apps use', 'software use']
+                },
+                {
+                    id: 'process',
+                    question: { en: 'How do you work on a video?', ur: 'Aap video par kaam kaise karte hain?' },
+                    answer: {
+                        en: 'I shape the idea into a clear concept, then work through AI generation and editing, transitions, sound design, captions, and final production. We can discuss your brief and goals before getting started.',
+                        ur: 'Pehle idea ko clear concept mein shape karta hoon, phir AI generation aur editing, transitions, sound design, captions aur final production par kaam hota hai. Shuru karne se pehle aapka brief aur goals discuss kar sakte hain.'
+                    },
+                    keywords: ['process', 'workflow', 'how do you work', 'how does it work', 'how to start', 'start a project', 'kaam kaise', 'kaise kaam', 'process kya', 'shuru kaise', 'video banate', 'project start']
+                },
+                {
+                    id: 'pricing',
+                    question: { en: 'How much do your services cost?', ur: 'Aapki services ke charges kya hain?' },
+                    answer: {
+                        en: 'Pricing depends on the video type, length, and project requirements. Share a few details about what you need, and I can discuss a suitable quote with you.',
+                        ur: 'Charges video ki type, duration aur project requirements par depend karte hain. Aap apni zaroorat ki details share karein, phir munasib quote discuss kar lete hain.'
+                    },
+                    keywords: ['price', 'pricing', 'cost', 'charges', 'rate', 'quote', 'budget', 'how much', 'kitne paise', 'kitna kharcha', 'charges kya', 'price kya', 'qeemat', 'fees']
+                },
+                {
+                    id: 'delivery',
+                    question: { en: 'How long does a video take?', ur: 'Video tayyar hone mein kitna waqt lagta hai?' },
+                    answer: {
+                        en: 'Turnaround depends on the video length, style, and scope. Send your requirements and deadline, and I can discuss a realistic schedule.',
+                        ur: 'Delivery ka waqt video ki duration, style aur kaam ke scope par depend karta hai. Apni requirements aur deadline bhejein, phir realistic schedule discuss karte hain.'
+                    },
+                    keywords: ['how long', 'turnaround', 'delivery time', 'deadline', 'when ready', 'kitna waqt', 'kitna time', 'kab tak', 'delivery kab', 'kitne din', 'video ready']
+                },
+                {
+                    id: 'portfolio',
+                    question: { en: 'Can I see your projects?', ur: 'Kya main aapke projects dekh sakta hoon?' },
+                    answer: {
+                        en: 'The portfolio projects section is being updated, so examples are not published here yet. Contact me to ask about relevant samples.',
+                        ur: 'Portfolio ka projects section update ho raha hai, is liye abhi yahan examples publish nahi hue. Relevant samples ke liye mujh se rabta karein.'
+                    },
+                    keywords: ['portfolio', 'projects', 'project examples', 'work samples', 'samples', 'showreel', 'previous work', 'examples', 'projects dekh', 'kaam dekh', 'sample dikha', 'purana kaam']
+                },
+                {
+                    id: 'contact',
+                    question: { en: 'How can I contact you?', ur: 'Aapse rabta kaise kar sakta hoon?' },
+                    answer: {
+                        en: 'You can reach me on WhatsApp or email. Share what you have in mind, and I’ll get back to you.',
+                        ur: 'Aap WhatsApp ya email par mujh se rabta kar sakte hain. Apne project ka idea bhejein, main aapko jawab dunga.'
+                    },
+                    keywords: ['contact', 'get in touch', 'whatsapp', 'email', 'reach you', 'rabta', 'contact kaise', 'baat kaise', 'number', 'message you']
+                }
+            ];
+
+            const faqUiText = {
+                en: {
+                    launcher: 'Ask about my work',
+                    closeLauncher: 'Close chat',
+                    title: 'Portfolio FAQ',
+                    status: 'Instant answers about my work',
+                    placeholder: 'Ask a question...',
+                    inputLabel: 'Ask a question',
+                    send: 'Send',
+                    close: 'Close chat',
+                    welcome: 'Hi! I can answer common questions about my video editing services, tools, process, and availability. Choose a question below or type your own.',
+                    fallback: 'I don’t have a prepared answer for that yet. This is a portfolio FAQ assistant, not a live AI chat. Try one of the suggested questions, or contact me directly.',
+                    promptsLabel: 'Suggested questions',
+                    contact: 'WhatsApp',
+                    email: 'Email'
+                },
+                ur: {
+                    launcher: 'Mere kaam ke baare mein poochein',
+                    closeLauncher: 'Chat band karein',
+                    title: 'Portfolio FAQ',
+                    status: 'Mere kaam ke foran jawab',
+                    placeholder: 'Apna sawal likhein...',
+                    inputLabel: 'Apna sawal likhein',
+                    send: 'Bhejein',
+                    close: 'Chat band karein',
+                    welcome: 'Assalam-o-alaikum! Main meri video editing services, tools, kaam ke tareeqe aur availability ke aam sawalon ke jawab de sakta hoon. Neeche koi sawal chunein ya apna sawal likhein.',
+                    fallback: 'Is sawal ka tayyar jawab mere paas filhaal nahi hai. Yeh portfolio FAQ assistant hai, live AI chat nahi. Neeche diye gaye sawalat try karein ya mujh se seedha rabta karein.',
+                    promptsLabel: 'Aam sawalat',
+                    contact: 'WhatsApp',
+                    email: 'Email'
+                }
+            };
+
+            function addFaqMessage(text, sender) {
+                const message = document.createElement('div');
+                message.className = 'faq-chat-message ' + sender;
+                message.textContent = text;
+                faqMessages.appendChild(message);
+                faqBody.scrollTop = faqBody.scrollHeight;
+            }
+
+            function addContactLinks(container) {
+                const links = document.createElement('div');
+                links.className = 'faq-chat-contact-links';
+
+                const whatsapp = document.createElement('a');
+                whatsapp.href = 'https://wa.me/923485269336';
+                whatsapp.target = '_blank';
+                whatsapp.rel = 'noopener noreferrer';
+                whatsapp.textContent = faqUiText[faqLanguage].contact;
+                links.appendChild(whatsapp);
+
+                const email = document.createElement('a');
+                email.href = 'mailto:rizwansps7472@gmail.com';
+                email.textContent = faqUiText[faqLanguage].email;
+                links.appendChild(email);
+
+                container.appendChild(links);
+                faqBody.scrollTop = faqBody.scrollHeight;
+            }
+
+            function normalizeFaqText(text) {
+                return text.toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu, ' ').replace(/\s+/g, ' ').trim();
+            }
+
+            function findFaq(text) {
+                const normalized = normalizeFaqText(text);
+                let bestMatch = null;
+                let bestScore = 0;
+
+                faqItems.forEach((item) => {
+                    const score = item.keywords.reduce((total, keyword) => {
+                        return normalized.includes(normalizeFaqText(keyword)) ? total + keyword.length : total;
+                    }, 0);
+                    if (score > bestScore) {
+                        bestMatch = item;
+                        bestScore = score;
+                    }
+                });
+
+                return bestMatch;
+            }
+
+            function answerFaq(item) {
+                addFaqMessage(item.question[faqLanguage], 'user');
+                addFaqMessage(item.answer[faqLanguage], 'bot');
+                if (item.id === 'contact' || item.id === 'portfolio') {
+                    addContactLinks(faqMessages.lastElementChild);
+                }
+            }
+
+            function renderFaqPrompts() {
+                faqPrompts.replaceChildren();
+                faqItems.forEach((item) => {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.textContent = item.question[faqLanguage];
+                    button.addEventListener('click', () => answerFaq(item));
+                    faqPrompts.appendChild(button);
+                });
+            }
+
+            function setFaqLanguage(language) {
+                faqLanguage = language;
+                const ui = faqUiText[language];
+                document.getElementById('faqLauncherLabel').textContent = faqChat.hidden ? ui.launcher : ui.closeLauncher;
+                document.getElementById('faqChatTitle').textContent = ui.title;
+                document.getElementById('faqChatStatus').textContent = ui.status;
+                faqInput.placeholder = ui.placeholder;
+                faqInput.setAttribute('aria-label', ui.inputLabel);
+                document.getElementById('faqChatSend').textContent = ui.send;
+                faqClose.setAttribute('aria-label', ui.close);
+                faqPrompts.setAttribute('aria-label', ui.promptsLabel);
+                document.querySelectorAll('.faq-language-toggle button').forEach((button) => {
+                    button.setAttribute('aria-pressed', String(button.dataset.language === language));
+                });
+                renderFaqPrompts();
+
+                if (!welcomeAdded) {
+                    addFaqMessage(ui.welcome, 'bot');
+                    welcomeAdded = true;
+                }
+            }
+
+            function toggleFaqChat(open) {
+                faqChat.hidden = !open;
+                faqLauncher.setAttribute('aria-expanded', String(open));
+                document.getElementById('faqLauncherLabel').textContent = open
+                    ? faqUiText[faqLanguage].closeLauncher
+                    : faqUiText[faqLanguage].launcher;
+                if (open) {
+                    faqInput.focus();
+                } else {
+                    faqLauncher.focus();
+                }
+            }
+
+            faqLauncher.addEventListener('click', () => toggleFaqChat(faqChat.hidden));
+            faqClose.addEventListener('click', () => toggleFaqChat(false));
+            document.querySelectorAll('.faq-language-toggle button').forEach((button) => {
+                button.addEventListener('click', () => setFaqLanguage(button.dataset.language));
+            });
+            faqForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const question = faqInput.value.trim();
+                if (!question) return;
+
+                addFaqMessage(question, 'user');
+                const match = findFaq(question);
+                if (match) {
+                    addFaqMessage(match.answer[faqLanguage], 'bot');
+                    if (match.id === 'contact' || match.id === 'portfolio') {
+                        addContactLinks(faqMessages.lastElementChild);
+                    }
+                } else {
+                    addFaqMessage(faqUiText[faqLanguage].fallback, 'bot');
+                    addContactLinks(faqMessages.lastElementChild);
+                }
+                faqInput.value = '';
+                faqInput.focus();
+            });
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && !faqChat.hidden) {
+                    toggleFaqChat(false);
+                }
+            });
+            setFaqLanguage('en');
+
+            // ========== STAGGERED SKILL TAGS ==========
+            const skillTags = document.querySelectorAll('.skill-tag');
+            skillTags.forEach((tag, i) => {
+                tag.style.transitionDelay = (i * 0.02) + 's';
+            });
+
+        })();
+    </script>
+
+</body>
+</html>
